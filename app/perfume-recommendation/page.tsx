@@ -50,10 +50,10 @@ const OccasionArray = Object.values(Occasion)
 const formSchema = z.object({
     perfume_description: z.string().min(2).max(150),
     perfume_price: z.number().min(10).max(1000),
-    perfume_preferred_scents: z.nativeEnum(PreferredScents),
-    perfume_disliked_scents: z.nativeEnum(PreferredScents),
+    perfume_preferred_scents: z.enum(Object.keys(PreferredScents) as [string, ...string[]]),
+    perfume_disliked_scents: z.enum(Object.keys(PreferredScents) as [string, ...string[]]),
     gender: z.enum(["male", "female"]),
-    perfume_occasion: z.nativeEnum(Occasion),
+    perfume_occasion: z.enum(Object.keys(Occasion) as [string, ...string[]]),
     perfume_time: z.enum(["day", "night"]),
     perfume_season: z.enum(["winter", "spring", "summer", "fall"]),
 })
@@ -62,15 +62,15 @@ const Page = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            perfume_description: "",
-            perfume_price: 100,
-            perfume_preferred_scents: "fruity notes",
-            perfume_disliked_scents: "herbal and aromatic notes",
-            gender: "male",
-            perfume_occasion: "Work",
-            perfume_time: "day",
-            perfume_season: "spring",
-        },
+    perfume_description: "",
+    perfume_price: 100,
+    perfume_preferred_scents: "fruity", // Change to match enum values
+    perfume_disliked_scents: "herbal", // Change to match enum values
+    gender: "male",
+    perfume_occasion: "work", // Change to match enum values
+    perfume_time: "day",
+    perfume_season: "spring",
+},
     })
 
     const [recommendations, setRecommendations] = useState<string[]>([]);
