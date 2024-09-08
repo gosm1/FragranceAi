@@ -1,5 +1,4 @@
 "use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import React, { useState } from 'react'
@@ -18,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { z } from "zod"
 import Navbar from "@/components/Navbar"
 
-export const PreferredScents = {
+const PreferredScents = {
     citrus_green: 'citrus and green notes',
     vanilla_amber: 'vanilla and amber notes',
     woody: 'woody notes',
@@ -30,11 +29,11 @@ export const PreferredScents = {
     sweet_gourmand: 'sweet gourmand notes',
     herbal_aromatic: 'herbal and aromatic notes',
 } as const 
-export type PreferredScents = (typeof PreferredScents)[keyof typeof PreferredScents]
+type PreferredScents = (typeof PreferredScents)[keyof typeof PreferredScents]
 
 const PreferredScentsArray = Object.values(PreferredScents)
 
-export const Occasion = {
+const Occasion = {
     daily: 'Daily Wear',
     work: 'Work',
     evening_out: 'Evening Out',
@@ -42,7 +41,7 @@ export const Occasion = {
     special_occasions: 'Special Occasions',
     summer_vacation: 'Summer Vacation',
 } as const 
-export type Occasion = (typeof Occasion)[keyof typeof Occasion]
+type Occasion = (typeof Occasion)[keyof typeof Occasion]
 
 const OccasionArray = Object.values(Occasion)
 
@@ -50,10 +49,10 @@ const OccasionArray = Object.values(Occasion)
 const formSchema = z.object({
     perfume_description: z.string().min(2).max(150),
     perfume_price: z.number().min(10).max(1000),
-    perfume_preferred_scents: z.enum(Object.keys(PreferredScents) as [string, ...string[]]),
-    perfume_disliked_scents: z.enum(Object.keys(PreferredScents) as [string, ...string[]]),
+    perfume_preferred_scents: z.nativeEnum(PreferredScents),
+    perfume_disliked_scents: z.nativeEnum(PreferredScents),
     gender: z.enum(["male", "female"]),
-    perfume_occasion: z.enum(Object.keys(Occasion) as [string, ...string[]]),
+    perfume_occasion: z.nativeEnum(Occasion),
     perfume_time: z.enum(["day", "night"]),
     perfume_season: z.enum(["winter", "spring", "summer", "fall"]),
 })
@@ -62,21 +61,20 @@ const Page = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-    perfume_description: "",
-    perfume_price: 100,
-    perfume_preferred_scents: "fruity", // Change to match enum values
-    perfume_disliked_scents: "herbal", // Change to match enum values
-    gender: "male",
-    perfume_occasion: "work", // Change to match enum values
-    perfume_time: "day",
-    perfume_season: "spring",
-},
+            perfume_description: "",
+            perfume_price: 100,
+            perfume_preferred_scents: "fruity notes",
+            perfume_disliked_scents: "herbal and aromatic notes",
+            gender: "male",
+            perfume_occasion: "Work",
+            perfume_time: "day",
+            perfume_season: "spring",
+        },
     })
 
     const [recommendations, setRecommendations] = useState<string[]>([]);
     const [showForm, setShowForm] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true);
@@ -91,8 +89,7 @@ const Page = () => {
             perfume_season
         } = values;
     
-        const prompt = `const prompt = Please recommend 6 perfumes  for someone who describes their ideal fragrance as '${perfume_description}' and is looking to spend up to $${perfume_price}. They prefer scents like ${perfume_preferred_scents} but dislike ${perfume_disliked_scents}. The perfume is intended for a ${gender} and will be worn for ${perfume_occasion} during the ${perfume_time} in the ${perfume_season}. Considering these preferences, suggest a fragrance that would be a perfect match for this person. give me only the name of the perfume as well as the brand and the price in dollars. and the 3 top notes of the perfume you must provide an array of 6 recommendations;`;
-
+        const prompt = `Please recommend 6 perfumes  for someone who describes their ideal fragrance as '${perfume_description}' and is looking to spend up to $${perfume_price}. They prefer scents like ${perfume_preferred_scents} but dislike ${perfume_disliked_scents}. The perfume is intended for a ${gender} and will be worn for ${perfume_occasion} during the ${perfume_time} in the ${perfume_season}. Considering these preferences, suggest a fragrance that would be a perfect match for this person. give me only the name of the perfume as well as the brand and the price in dollars. and the 3 top notes of the perfume you must provide an array of 6 recommendations`
 ;                                                                 
         try {
             const response = await fetch('/api/perfume-recommendation', {
