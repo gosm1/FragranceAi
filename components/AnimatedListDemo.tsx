@@ -2,7 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { AnimatedList } from "@/components/magicui/animated-list";
-import Image from 'next/image'; // Import Image from Next.js
+import Image from 'next/image';
+import { StaticImageData } from 'next/image';
 import mfk from '@/assets/mfk.webp';
 import oud from '@/assets/oudmaracuja.png'
 import lv from '@/assets/louisont view.webp'
@@ -12,50 +13,52 @@ import sljedd from '@/assets/file.png'
 interface Item {
   name: string;
   description: string;
-  icon: string; // This can be either a URL or a text icon
+  icon: StaticImageData;
   color: string;
+  time: string;
 }
-let notifications = [
+
+let notifications: Item[] = [
   {
     name: "Grand Soir",
     description: "MAISON FRANCIS KURKDJIAN",
     time: "15m ago",
-    icon: mfk, // StaticImageData
+    icon: mfk,
     color: "#000",
   },
   {
     name: "Oud Maracujá",
     description: "MAISON CRIVELLI",
     time: "10m ago",
-    icon: oud , // Text icon
+    icon: oud,
     color: "#000",
   },
   {
     name: "Ombre Nomade",
     description: "LOUIS VUITTON",
     time: "5m ago",
-    icon: lv, // Text icon
+    icon: lv,
     color: "#000",
   },
   {
     name: "Angel Share",
     description: "KILLIAN",
     time: "2m ago",
-    icon: angl, // Text icon
+    icon: angl,
     color: "#000",
   },
   {
     name: " Soleil de Jeddah ",
     description: "Stéphane Humbert Lucas ",
     time: "2m ago",
-    icon: sljedd, // Text icon
+    icon: sljedd,
     color: "#000",
   },
 ];
 
 notifications = Array.from({ length: 10 }, () => notifications).flat();
 
-const Notification = ({ name, description, icon, color }: Item) => {
+const Notification = ({ name, description, icon, color, time }: Item) => {
   return (
     <figure
       className={cn(
@@ -68,11 +71,8 @@ const Notification = ({ name, description, icon, color }: Item) => {
       <div className="flex flex-row items-center gap-3">
         <div
           className="flex size-10 items-center justify-center rounded-2xl"
-          
         >
-          
-            <Image src={icon} alt={name} height={40} width={40} />
-          
+          <Image src={icon} alt={name} height={40} width={40} />
         </div>
         <div className="flex flex-col overflow-hidden">
           <figcaption className="flex flex-row items-center whitespace-pre text-lg font-medium dark:text-white">
