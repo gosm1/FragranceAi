@@ -13,14 +13,7 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
 
-  const gradientTextStyle = {
-    color: "#636363",
-    backgroundImage: "-webkit-linear-gradient(90deg, #636363 0%, #d6d6d6 50%)",
-    backgroundClip: "text",
-    WebkitBackgroundClip: "text",
-    textFillColor: "transparent",
-    WebkitTextFillColor: "transparent",
-};
+
   
 
   return (
@@ -35,10 +28,12 @@ export default function Home() {
           <BlurIn className="bg-gradient-to-t from-gray-600 to-[#12181C] bg-clip-text text-transparent "  word="To Match Your Unique Preferences." />
         </div>
         <Image src={jpg} alt="jpg" height={120} className="z-10 mt-5 block md:hidden" />
-        <div className="z-10 flex pt-12 items-center justify-center">
+        <p className="pt-8 text-sm md:text-lg md:max-w-2xl text-center">Let our intelligent fragrance matcher learn your preferences and recommend the perfect perfume tailored just for you</p>
+        <div className="z-10 flex pt-8 items-center justify-center">
           <ShimmerButton href="/perfume-recommendation" className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-md">
               Get Recommendation
           </ShimmerButton>
+          
     </div>
       <DotPattern
         className={cn(
