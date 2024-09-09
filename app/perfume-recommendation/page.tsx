@@ -50,7 +50,6 @@ const formSchema = z.object({
     perfume_description: z.string().min(2).max(150),
     perfume_price: z.number().min(10).max(1000),
     perfume_preferred_scents: z.nativeEnum(PreferredScents),
-    perfume_disliked_scents: z.nativeEnum(PreferredScents),
     gender: z.enum(["male", "female"]),
     perfume_occasion: z.nativeEnum(Occasion),
     perfume_time: z.enum(["day", "night"]),
@@ -64,7 +63,6 @@ const Page = () => {
             perfume_description: "",
             perfume_price: 100,
             perfume_preferred_scents: "fruity notes",
-            perfume_disliked_scents: "herbal and aromatic notes",
             gender: "male",
             perfume_occasion: "Work",
             perfume_time: "day",
@@ -82,14 +80,52 @@ const Page = () => {
             perfume_description,
             perfume_price,
             perfume_preferred_scents,
-            perfume_disliked_scents,
             gender,
             perfume_occasion,
             perfume_time,
             perfume_season
         } = values;
     
-        const prompt = `Please recommend 6 perfumes  for someone who describes their ideal fragrance as '${perfume_description}' and is looking to spend up to $${perfume_price}. They prefer scents like ${perfume_preferred_scents} but dislike ${perfume_disliked_scents}. The perfume is intended for a ${gender} and will be worn for ${perfume_occasion} during the ${perfume_time} in the ${perfume_season}. Considering these preferences, suggest a fragrance that would be a perfect match for this person. give me only the name of the perfume as well as the brand and the price in dollars. and the 3 top notes of the perfume you must provide an array of 6 recommendations`
+        const prompt = `You are a highly knowledgeable perfume expert with access to an extensive database of fragrances. Your task is to recommend 6 perfumes based on the following criteria:
+
+                    Input Parameters:
+                    - Ideal fragrance description: ${perfume_description}
+                    - Budget: Up to $${perfume_price}
+                    - Preferred scent types: ${perfume_preferred_scents}
+                    - Gender: ${gender}
+                    - Occasion: ${perfume_occasion}
+                    - Time of day: ${perfume_time}
+                    - Season: ${perfume_season}
+
+                    Instructions:
+                    1. Analyze the input parameters meticulously, prioritizing the ideal fragrance description and preferred scent types.
+                    2. Ensure recommendations are suitable for the specified occasion, time of day, and season.
+                    3. Select 6 perfumes that best match the given criteria, with prices ranging from 80% to 100% of the specified budget to offer a range of options.
+                    4. Provide diverse recommendations while adhering to preferences. Include:
+                        - At least one lesser-known or niche brand
+                        - One "signature scent" potential for daily wear (if appropriate)
+                        - One slightly adventurous option that pushes boundaries while still aligning with overall preferences
+                    5. If specific notes or attributes are mentioned in the fragrance description, prioritize these in your selection, even if not explicitly listed in preferred scent types.
+                    6. Consider the gender preference as a guideline, not a strict rule. If a fragrance from another gender category is a perfect match, include it.
+                    7. For each recommendation, briefly consider longevity and sillage based on the occasion and time of day.
+                    8. Ensure that each recommendation has a distinct reason for inclusion, avoiding overlap or redundancy in the selection.
+
+                    Output Format:
+                    Provide an array of 6 recommendations. For each recommendation, include only:
+                    - The name of the perfume
+                    - The brand
+                    - The price in US dollars
+                    - The 3 top notes of the perfume
+
+                    Present your recommendations in this format:
+
+                    1. Perfume Name by Brand Name, $XX - (Note 1, Note 2, Note 3)
+                    2. Perfume Name by Brand Name, $XX - (Note 1, Note 2, Note 3)
+                    (Continue for all 6 recommendations)
+
+                    Ensure that your recommendations are listed in order from most to least aligned with the given preferences.
+
+                    Remember: Each recommendation should be thoughtfully selected to provide a perfect balance of matching the specified criteria while offering a range of options within the given parameters.`
 ;                                                                 
         try {
             const response = await fetch('/api/perfume-recommendation', {
@@ -121,8 +157,7 @@ const Page = () => {
     return (
         <>
         <Navbar/>
-        <section className="flex justify-center items-center  pt-10">
-            
+        <section className="flex justify-center items-center  py-10">
             {isLoading ? (
                 <div className="text-center pt-20">
                     <div
@@ -135,7 +170,10 @@ const Page = () => {
                 </div>
 
             ) : showForm ? (
+                <section>
+                <h1 className="text-center text-xl md:text-2xl lg:text-3xl font-semibold pb-8">Enter your Unique Preferences</h1>
                 <Form {...form} >
+                    
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
@@ -183,35 +221,6 @@ const Page = () => {
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select preferred scent" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {PreferredScentsArray.map((scent) => (
-                                                <SelectItem key={scent} value={scent}>
-                                                    {scent}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="perfume_disliked_scents"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Perfume Diskliked Scents</FormLabel>
-                                <FormControl>
-                                    <Select
-                                        onValueChange={(value) => field.onChange(value)}
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select Diskliked scent" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -337,6 +346,7 @@ const Page = () => {
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>
+                </section>
             ) : (
                 <div className="px-10 pt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {recommendations.map((recommendation, index) => (
