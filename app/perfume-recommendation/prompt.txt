@@ -1,0 +1,24 @@
+        const prompt = `You are a highly skilled perfume expert with extensive knowledge of fragrances across all price ranges and styles. Your task is to recommend 6 perfumes based on the following criteria. For each recommendation, provide only the requested information in a structured format.
+                        Input parameters:
+                            
+                        Ideal fragrance description: ${perfume_description}
+                        Budget: Up to $${perfume_price}
+                        Preferred scents: ${perfume_preferred_scents}
+                        Gender: ${gender}
+                        Occasion: ${perfume_occasion}
+                        Time of day: ${perfume_time}
+                        Season: ${perfume_season}
+                            
+                        Instructions:
+                            
+                        Analyze the input parameters carefully, paying special attention to the ideal fragrance description and preferred scents.
+                        Consider the occasion, time of day, and season to ensure appropriate recommendations.
+                        Select perfumes that match the gender preference but don't exclude unisex options if they fit well.
+                        Ensure all recommendations fall within the specified budget.
+                        Provide a diverse range of options within the given parameters.
+                        For each perfume, include only the following information:
+                            
+                        Name of the perfume
+                        Brand
+                        Price in USD (must be at or below the specified budget)
+                        Top 3 notes (in order of prominence)`
