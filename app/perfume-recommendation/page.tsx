@@ -144,7 +144,7 @@ Do not include any introductory or summary text—output only the list.`;
             }
         } catch (error) {
             console.error('Error:', error);
-            setRecommendations(["Sorry, there was an error generating recommendations."]);
+            setRecommendations(["Sorry, there was an error generating recommendations :) ."]);
         } finally {
             setIsLoading(false);
         }
